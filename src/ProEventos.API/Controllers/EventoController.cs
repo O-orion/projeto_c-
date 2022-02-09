@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using ProEventos.API.data;
 using ProEventos.API.Models;
 
 namespace ProEventos.API.Controllers
@@ -11,33 +12,24 @@ namespace ProEventos.API.Controllers
     public class EventoController : ControllerBase
     {
 
-        public IEnumerable<Evento> _eventos =  new Evento[] {
-                new Evento() {
-                    EventoId = 1,
-                    Local = "Igreja de Jesus",
-                    DataEvento = new DateTime(),
-                    Tema = "JESUS CRISTO É PERFEITO!!",
-                    QtdPessoas = 100000000,
-                    Lote = 1,
-                    ImagemURL = "wwww.google.com/jesusCristoEOSenhor"
-                }
-            };
-        
+        private readonly DataContext _context;
 
-        public EventoController()
+        public EventoController(DataContext context)
         {
-            
+            this._context = context;
+
         }
 
         [HttpGet]
         public IEnumerable<Evento> Get()
         {
-            return _eventos;
+            return _context.Eventos;
         }
 
         [HttpGet("{id}")]
-        public IEnumerable<Evento> GetById(int id){
-            return _eventos.Where(Evento => Evento.EventoId == id);//retornando evento por ID
+        public Evento GetById(int id)
+        {
+            return _context.Eventos.FirstOrDefault(Evento => Evento.EventoId == id);//retornando evento por ID
         }
 
         [HttpPost]
@@ -49,7 +41,7 @@ namespace ProEventos.API.Controllers
         [HttpPut("{id}")]
         public string Put(int id)
         {
-            return  $"JESUS CRISTO É O MEU AMADO! : {id}";
+            return $"JESUS CRISTO É O MEU AMADO! : {id}";
         }
 
         [HttpDelete("{id}")]
